@@ -27,6 +27,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 public class Main2Activity extends AppCompatActivity {
 
 
@@ -37,6 +41,7 @@ public class Main2Activity extends AppCompatActivity {
     private DatabaseReference mRef;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +71,15 @@ public class Main2Activity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(user==null){
-            startActivity(new Intent(Main2Activity.this,LoginPage.class));
+            Intent i=new Intent(Main2Activity.this,LoginPage.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+            finish();
+            //startActivity(new Intent(Main2Activity.this,LoginPage.class));
         }
         else{
+
+            updateUserState("online");
             String uId=mAuth.getCurrentUser().getUid();
             mRef.child("Users").child(uId).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -90,6 +101,18 @@ public class Main2Activity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        updateUserState("offline");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        updateUserState("offline");
     }
 
     private void sendUserToSettingActivity() {
@@ -114,6 +137,8 @@ public class Main2Activity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_find_friend:
 
+                Intent intent=new Intent(Main2Activity.this,FindFriend.class);
+                startActivity(intent);
                 break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
@@ -170,6 +195,31 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void updateUserState(String state){
+
+        String saveCurrentTime,saveCurrentDate;
+
+        Calendar calendar=Calendar.getInstance();
+
+        SimpleDateFormat currentDate= new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate=currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
+        saveCurrentTime=currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineState=new HashMap<>();
+
+        onlineState.put("time",saveCurrentTime);
+        onlineState.put("date",saveCurrentDate);
+        onlineState.put("state",state);
+
+        currentUserId=mAuth.getCurrentUser().getUid();
+
+        mRef.child("Users").child(currentUserId).child("userState")
+                .updateChildren(onlineState);
 
     }
 }

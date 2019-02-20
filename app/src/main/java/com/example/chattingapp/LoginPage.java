@@ -20,6 +20,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +36,7 @@ public class LoginPage extends AppCompatActivity {
 
     private ProgressDialog loading;
     private FirebaseAuth mAuth;
+    private DatabaseReference userRef;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallBacks;
 
 
@@ -42,6 +46,7 @@ public class LoginPage extends AppCompatActivity {
         setContentView(R.layout.login_activity);
 
         intializeFields();
+        userRef= FirebaseDatabase.getInstance().getReference().child("Users");
         lLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +57,12 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginPage.this,Regestration.class));
+            }
+        });
+        lPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginPage.this,PhoneLogin.class));
             }
         });
 
@@ -79,19 +90,34 @@ public class LoginPage extends AppCompatActivity {
             loading.setMessage("Please wait...");
             loading.setCanceledOnTouchOutside(true);
             loading.show();
-            mAuth.signInWithEmailAndPassword(email.trim(),password.trim()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(email.trim(),password.trim())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        Toast.makeText(LoginPage.this, "Login Complete", Toast.LENGTH_SHORT).show();
-                        sendUserToMainActivity();
-                        loading.dismiss();
-                    }
-                    else {
-                        String message = task.getException().toString();
-                        Toast.makeText(LoginPage.this, ""+message, Toast.LENGTH_SHORT).show();
-                        loading.dismiss();
-                    }
+                        if(task.isSuccessful()){
+
+                            String currentUserId=mAuth.getCurrentUser().getUid();
+                            String deviceToken= FirebaseInstanceId.getInstance().getToken();
+
+                            userRef.child(currentUserId).child("device_token").setValue(deviceToken)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+
+                                                Toast.makeText(LoginPage.this, "Login Complete", Toast.LENGTH_SHORT).show();
+                                                sendUserToMainActivity();
+                                                loading.dismiss();
+                                            }
+                                        }
+                                    });
+
+                        }
+                        else {
+                            String message = task.getException().toString();
+                            Toast.makeText(LoginPage.this, ""+message, Toast.LENGTH_SHORT).show();
+                            loading.dismiss();
+                        }
 
                 }
             });
@@ -108,6 +134,7 @@ public class LoginPage extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+
 
 
     private void intializeFields() {

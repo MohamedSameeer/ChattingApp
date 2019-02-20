@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/profile_image"
+        android:id="@+id/message_profile_image"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="@+id/message_profile_image"
+        app:layout_constraintStart_toEndOf="@+id/message_profile_image"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/receiver_message_layout"
+        android:id="@+id/receiver_message"
+        android:padding="10dp"
+        android:textSize="14sp"
+        android:text="Hello........"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/sender_message_id"
+        android:id="@+id/sender_message"
+        android:padding="10dp"
+        android:textSize="14sp"
+        android:text="hello...."
+        android:textStyle="bold"
+        />
+
+</android.support.constraint.ConstraintLayout>

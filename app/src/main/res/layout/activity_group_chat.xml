@@ -1,59 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".GroupChat">
 
     <include
         android:id="@+id/group_chat_bar"
-        layout="@layout/app_bar_layout"/>
+        layout="@layout/app_bar_layout"
+        />
+
 
     <ScrollView
         android:id="@+id/group_chat_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/group_chat_bar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/group_chat_send_message"
-        app:layout_constraintEnd_toEndOf="parent">
+       android:layout_below="@+id/group_chat_bar">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/group_chat_message"
-            android:padding="10dp"
-            android:textAllCaps="false"
-            android:textSize="20sp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginBottom="50dp"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/group_chat_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="60dp"
+                android:padding="10dp"
+                android:textAllCaps="false"
+                android:textSize="20sp" />
+
+        </LinearLayout>
     </ScrollView>
 
     <LinearLayout
         android:id="@+id/group_chat_send_message"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="horizontal">
-        
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
         <EditText
             android:id="@+id/input_group_message"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:padding="17dp"
-            android:layout_height="wrap_content" />
+
+            android:padding="17dp" />
 
         <ImageButton
             android:id="@+id/send_message_button"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:src="@drawable/send_message"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/send_message" />
 
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+
+
+</RelativeLayout>

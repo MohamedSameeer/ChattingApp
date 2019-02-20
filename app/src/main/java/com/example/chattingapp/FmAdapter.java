@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.example.chattingapp.Fragment.ChatFragment;
 import com.example.chattingapp.Fragment.ContactFragment;
 import com.example.chattingapp.Fragment.GroupFragment;
+import com.example.chattingapp.Fragment.RequestFragment;
 
 public class FmAdapter extends FragmentPagerAdapter {
 
@@ -32,6 +33,9 @@ public class FmAdapter extends FragmentPagerAdapter {
             case 2:
                title="Contact";
                 break;
+            case 3:
+                title="Requests";
+                break;
             default:
                 title="Chat";
 
@@ -52,6 +56,9 @@ public class FmAdapter extends FragmentPagerAdapter {
             case 2:
                 fragment=new ContactFragment();
                 break;
+            case 3:
+                fragment=new RequestFragment();
+                break;
             default:
                 fragment=new ChatFragment();
 
@@ -61,6 +68,6 @@ public class FmAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 }
